@@ -72,6 +72,7 @@ input[type="search"] {
 .stop-lines { color: var(--accent); font-size: 0.9rem; }
 .stop-status { color: var(--muted); font-size: 0.85rem; }
 
+/* Dialog */
 dialog {
   width: min(92vw, 480px);
   border: 1px solid var(--border);
@@ -82,22 +83,64 @@ dialog {
 
 dialog::backdrop { background: rgba(0, 0, 0, 0.35); }
 
-.detail-body { padding: 20px; display: grid; gap: 8px; }
-.detail-body h2 { margin: 0; }
-.detail-body h3 { margin: 12px 0 0; font-size: 1rem; }
-.lines { color: var(--accent); margin: 0; }
-.detail-body ul { margin: 0; padding-left: 20px; }
-
-.detail-body label { display: grid; gap: 4px; font-size: 0.9rem; }
-.detail-body input, .detail-body textarea {
-  font: inherit;
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+.detail-body {
+  padding: 20px;
+  display: grid;
+  gap: 8px;
+  position: relative;
 }
 
-.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.detail-body h2 { margin: 0 28px 0 0; }
+.detail-body h3 { margin: 12px 0 4px; font-size: 1rem; }
+.lines { color: var(--accent); margin: 0; }
+.detail-body ul { margin: 0; padding-left: 20px; }
+.detail-body li { margin-bottom: 4px; }
 
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.4rem;
+  padding: 0 4px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close-btn:hover { color: var(--fg); }
+
+/* I'm here button */
+.im-here-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--visited);
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.im-here-btn:active { opacity: 0.85; }
+
+.visit-count-display {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* History */
+.history-section { border-top: 1px solid var(--border); padding-top: 8px; }
+.history-section ul { list-style: none; padding: 0; margin: 0 0 8px; }
+.history-section li { font-size: 0.9rem; color: var(--muted); padding: 2px 0; }
+
+/* Buttons */
 button {
   font: inherit;
   padding: 8px 14px;
@@ -113,4 +156,5 @@ button.secondary {
   color: var(--accent);
 }
 
+button.small { font-size: 0.85rem; padding: 6px 10px; }
 button:disabled { opacity: 0.4; cursor: default; }

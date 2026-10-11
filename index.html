@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Subway Stop Tracker</title>
+  <title>NYC Subway Counter</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <h1>Subway Stop Tracker</h1>
+    <h1>NYC Subway Counter</h1>
     <p id="summary"></p>
   </header>
 
@@ -22,22 +22,23 @@
   </main>
 
   <dialog id="detail">
-    <form method="dialog" class="detail-body">
+    <div class="detail-body">
+      <button type="button" id="closeDialog" class="close-btn" aria-label="Close">&times;</button>
       <h2 id="detailName"></h2>
       <p id="detailLines" class="lines"></p>
-      <h3>Things to do</h3>
+
+      <button type="button" id="imHere" class="im-here-btn">I'm here!</button>
+      <p id="detailVisitCount" class="visit-count-display"></p>
+
+      <h3>Things to do nearby</h3>
       <ul id="detailIdeas"></ul>
 
-      <h3>Log a visit</h3>
-      <label>Date <input id="visitDate" type="date" /></label>
-      <label>Note <textarea id="visitNote" rows="3" placeholder="What did you do here?"></textarea></label>
-
-      <div class="actions">
-        <button type="button" id="saveVisit">Save visit</button>
-        <button type="button" id="clearVisit" class="secondary">Remove visit</button>
-        <button type="submit" class="secondary">Close</button>
+      <div id="historySection" class="history-section" hidden>
+        <h3>Your visits</h3>
+        <ul id="visitHistory"></ul>
+        <button type="button" id="removeLastVisit" class="secondary small">Remove last visit</button>
       </div>
-    </form>
+    </div>
   </dialog>
 
   <script src="app.js"></script>
