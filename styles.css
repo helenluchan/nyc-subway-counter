@@ -1,0 +1,116 @@
+:root {
+  --bg: #f7f5f0;
+  --fg: #1d1d1b;
+  --muted: #6b6a64;
+  --accent: #0039a6;
+  --visited: #2e7d4f;
+  --card: #ffffff;
+  --border: #dcd8cc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+header, main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 { margin: 0 0 4px; font-size: 1.5rem; }
+header p { margin: 0; color: var(--muted); }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+input[type="search"] {
+  flex: 1 1 200px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.stop-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.stop-button {
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 2px;
+}
+
+.stop.visited .stop-button { border-left-color: var(--visited); }
+
+.stop-name { font-weight: 600; }
+.stop-lines { color: var(--accent); font-size: 0.9rem; }
+.stop-status { color: var(--muted); font-size: 0.85rem; }
+
+dialog {
+  width: min(92vw, 480px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0;
+  background: var(--card);
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, 0.35); }
+
+.detail-body { padding: 20px; display: grid; gap: 8px; }
+.detail-body h2 { margin: 0; }
+.detail-body h3 { margin: 12px 0 0; font-size: 1rem; }
+.lines { color: var(--accent); margin: 0; }
+.detail-body ul { margin: 0; padding-left: 20px; }
+
+.detail-body label { display: grid; gap: 4px; font-size: 0.9rem; }
+.detail-body input, .detail-body textarea {
+  font: inherit;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+button {
+  font: inherit;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+button:disabled { opacity: 0.4; cursor: default; }
