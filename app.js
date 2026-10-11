@@ -17,28 +17,21 @@ const LINE_META = {
 
 const LINE_ORDER = ['1','2','3','4','5','6','7','A','B','C','D','E','F','G','J','L','M','N','Q','R','S','W','Z'];
 
-let stops = [], visits = loadVisits(), activeStopId = null, activeFilter = null;
-let map = null, markers = {};
+let stops = [], visits = loadVisits(), activeFilter = null, activeStopId = null;
 
 const el = {
-  summary:       document.getElementById('summary'),
-  lineFilters:   document.getElementById('lineFilters'),
-  mapView:       document.getElementById('mapView'),
-  listView:      document.getElementById('listView'),
-  mapViewBtn:    document.getElementById('mapViewBtn'),
-  listViewBtn:   document.getElementById('listViewBtn'),
-  stopList:      document.getElementById('stopList'),
-  search:        document.getElementById('search'),
-  unvisitedOnly: document.getElementById('unvisitedOnly'),
-  dialog:        document.getElementById('detail'),
-  detailBullets: document.getElementById('detailBullets'),
-  detailName:    document.getElementById('detailName'),
-  detailIdeas:   document.getElementById('detailIdeas'),
-  visitCount:    document.getElementById('detailVisitCount'),
-  imHere:        document.getElementById('imHere'),
-  closeDialog:   document.getElementById('closeDialog'),
-  historySection:document.getElementById('historySection'),
-  visitHistory:  document.getElementById('visitHistory'),
+  summary:        document.getElementById('summary'),
+  lineFilters:    document.getElementById('lineFilters'),
+  svg:            document.getElementById('subwayMap'),
+  dialog:         document.getElementById('detail'),
+  detailBullets:  document.getElementById('detailBullets'),
+  detailName:     document.getElementById('detailName'),
+  detailIdeas:    document.getElementById('detailIdeas'),
+  visitCount:     document.getElementById('detailVisitCount'),
+  imHere:         document.getElementById('imHere'),
+  closeDialog:    document.getElementById('closeDialog'),
+  historySection: document.getElementById('historySection'),
+  visitHistory:   document.getElementById('visitHistory'),
   removeLastVisit:document.getElementById('removeLastVisit'),
 };
 
@@ -47,127 +40,127 @@ function loadVisits() {
   catch { return {}; }
 }
 function saveVisits() { localStorage.setItem(STORAGE_KEY, JSON.stringify(visits)); }
-
 function count(id) { return (visits[id] || []).length; }
 function today() {
   return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 function meta(line) { return LINE_META[line] || { bg: '#808183', t: '#fff' }; }
-
 function bullet(line, cls = 'b-sm') {
   const m = meta(line);
   return `<span class="bullet ${cls}" style="background:${m.bg};color:${m.t}">${line}</span>`;
+}
+
+// ── SVG map ──
+
+const NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs = {}) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+function project(stops, W, H, pad = 40) {
+  const lats = stops.map(s => s.lat), lngs = stops.map(s => s.lng);
+  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
+  const latSpan = (maxLat - minLat) || 0.01, lngSpan = (maxLng - minLng) || 0.01;
+  const xScale = (W - pad * 2) / lngSpan, yScale = (H - pad * 2) / latSpan;
+  return stops.map(s => ({
+    ...s,
+    x: Math.round((s.lng - minLng) * xScale + pad),
+    y: Math.round((maxLat - s.lat) * yScale + pad),
+  }));
+}
+
+function renderMap() {
+  el.svg.innerHTML = '';
+  const W = el.svg.clientWidth || 400;
+  const H = el.svg.clientHeight || 600;
+  el.svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const pts = project(stops, W, H);
+  const byId = Object.fromEntries(pts.map(s => [s.id, s]));
+
+  // Draw lines
+  for (const line of LINE_ORDER) {
+    const lineStops = pts.filter(s => s.lines.includes(line)).sort((a, b) => a.y - b.y);
+    if (lineStops.length < 2) continue;
+    const m = meta(line);
+    const dimmed = activeFilter && activeFilter !== line;
+    const polyline = svgEl('polyline', {
+      points: lineStops.map(s => `${s.x},${s.y}`).join(' '),
+      stroke: m.bg,
+      'stroke-width': '2.5',
+      fill: 'none',
+      'stroke-linejoin': 'round',
+      'stroke-linecap': 'round',
+      opacity: dimmed ? '0.07' : '0.85',
+    });
+    el.svg.appendChild(polyline);
+  }
+
+  // Draw stop circles
+  for (const stop of pts) {
+    const n = count(stop.id);
+    const m = meta(stop.lines[0]);
+    const dimmed = activeFilter && !stop.lines.includes(activeFilter);
+
+    const g = svgEl('g', { opacity: dimmed ? '0.15' : '1', style: 'cursor:pointer' });
+    g.addEventListener('click', () => openStop(stop.id));
+
+    // Outer circle
+    g.appendChild(svgEl('circle', {
+      cx: stop.x, cy: stop.y, r: '7',
+      fill: n > 0 ? m.bg : '#fff',
+      stroke: m.bg,
+      'stroke-width': '2',
+    }));
+
+    // Inner dot if visited
+    if (n > 0) {
+      g.appendChild(svgEl('circle', { cx: stop.x, cy: stop.y, r: '2.5', fill: '#fff' }));
+    }
+
+    // Stop name label
+    const label = svgEl('text', {
+      x: stop.x + 10,
+      y: stop.y + 4,
+      'font-size': '9',
+      'font-family': '-apple-system, sans-serif',
+      fill: '#888',
+    });
+    label.textContent = stop.name.split('-')[0].trim();
+    g.appendChild(label);
+
+    el.svg.appendChild(g);
+  }
 }
 
 // ── Line filters ──
 
 function buildFilters() {
   const present = new Set(stops.flatMap(s => s.lines));
-  const lines = LINE_ORDER.filter(l => present.has(l));
   el.lineFilters.innerHTML = '';
 
   const all = document.createElement('button');
   all.className = 'filter-all' + (activeFilter === null ? ' active' : '');
   all.textContent = 'All';
-  all.onclick = () => setFilter(null);
+  all.onclick = () => { activeFilter = null; buildFilters(); renderMap(); };
   el.lineFilters.appendChild(all);
 
-  for (const line of lines) {
+  for (const line of LINE_ORDER.filter(l => present.has(l))) {
     const m = meta(line);
     const btn = document.createElement('button');
     btn.className = 'bullet-filter' + (activeFilter === line ? ' active' : '');
     btn.style.setProperty('--c', m.bg);
     btn.style.setProperty('--t', m.t);
     btn.textContent = line;
-    btn.onclick = () => setFilter(line);
+    btn.onclick = () => { activeFilter = line; buildFilters(); renderMap(); };
     el.lineFilters.appendChild(btn);
   }
 }
 
-function setFilter(line) {
-  activeFilter = line;
-  buildFilters();
-  renderList();
-  refreshMarkers();
-}
-
-// ── Map ──
-
-function initMap() {
-  map = L.map('map', { zoomControl: true }).setView([40.72, -73.99], 12);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(map);
-}
-
-function pinIcon(stop) {
-  const m = meta(stop.lines[0]);
-  const n = count(stop.id);
-  const html = `
-    <div class="map-pin ${n > 0 ? 'map-pin-visited' : ''}" style="background:${m.bg};color:${m.t}">
-      ${stop.lines[0]}
-      ${n > 0 ? `<span class="pin-badge">${n}</span>` : ''}
-    </div>`;
-  return L.divIcon({ className: '', html, iconSize: [28, 28], iconAnchor: [14, 14] });
-}
-
-function addMarkers() {
-  for (const stop of stops) {
-    markers[stop.id] = L.marker([stop.lat, stop.lng], { icon: pinIcon(stop) })
-      .on('click', () => openStop(stop.id))
-      .addTo(map);
-  }
-}
-
-function refreshMarkers() {
-  for (const stop of stops) {
-    const m = markers[stop.id];
-    if (!m) continue;
-    const visible = !activeFilter || stop.lines.includes(activeFilter);
-    m.setIcon(pinIcon(stop));
-    m.setOpacity(visible ? 1 : 0.18);
-  }
-}
-
-// ── List ──
-
-function filtered() {
-  const q = (el.search.value || '').trim().toLowerCase();
-  return stops.filter(s => {
-    if (activeFilter && !s.lines.includes(activeFilter)) return false;
-    if (el.unvisitedOnly.checked && count(s.id) > 0) return false;
-    if (q && !s.name.toLowerCase().includes(q) && !s.lines.some(l => l.toLowerCase() === q)) return false;
-    return true;
-  });
-}
-
-function renderList() {
-  el.stopList.innerHTML = '';
-  for (const stop of filtered()) {
-    const n = count(stop.id);
-    const li = document.createElement('li');
-    li.className = n > 0 ? 'stop visited' : 'stop';
-    li.innerHTML = `
-      <button class="stop-btn">
-        <div class="stop-bullets">${stop.lines.map(l => bullet(l)).join('')}</div>
-        <div class="stop-info">
-          <span class="stop-name"></span>
-          <span class="stop-meta"></span>
-        </div>
-      </button>`;
-    li.querySelector('.stop-name').textContent = stop.name;
-    li.querySelector('.stop-meta').textContent =
-      n === 0 ? 'Not visited' : n === 1 ? '1 visit' : `${n} visits`;
-    li.querySelector('button').onclick = () => openStop(stop.id);
-    el.stopList.appendChild(li);
-  }
-
-  const total = stops.filter(s => count(s.id) > 0).length;
-  el.summary.textContent = `${total} / ${stops.length}`;
-}
-
-// ── Detail ──
+// ── Detail dialog ──
 
 function openStop(id) {
   const stop = stops.find(s => s.id === id);
@@ -212,8 +205,8 @@ el.imHere.onclick = () => {
   visits[activeStopId].push(today());
   saveVisits();
   renderDetail(stops.find(s => s.id === activeStopId));
-  renderList();
-  refreshMarkers();
+  renderMap();
+  el.summary.textContent = `${stops.filter(s => count(s.id) > 0).length} / ${stops.length}`;
 };
 
 el.removeLastVisit.onclick = () => {
@@ -222,31 +215,13 @@ el.removeLastVisit.onclick = () => {
   if (!visits[activeStopId].length) delete visits[activeStopId];
   saveVisits();
   renderDetail(stops.find(s => s.id === activeStopId));
-  renderList();
-  refreshMarkers();
+  renderMap();
+  el.summary.textContent = `${stops.filter(s => count(s.id) > 0).length} / ${stops.length}`;
 };
 
 el.closeDialog.onclick = () => el.dialog.close();
 
-// ── View toggle ──
-
-el.mapViewBtn.onclick = () => {
-  el.mapView.hidden = false;
-  el.listView.hidden = true;
-  el.mapViewBtn.classList.add('active');
-  el.listViewBtn.classList.remove('active');
-  map.invalidateSize();
-};
-
-el.listViewBtn.onclick = () => {
-  el.mapView.hidden = true;
-  el.listView.hidden = false;
-  el.listViewBtn.classList.add('active');
-  el.mapViewBtn.classList.remove('active');
-};
-
-el.search.oninput = renderList;
-el.unvisitedOnly.onchange = renderList;
+window.addEventListener('resize', renderMap);
 
 // ── Boot ──
 
@@ -254,11 +229,8 @@ fetch('data/stops.json')
   .then(r => r.json())
   .then(data => {
     stops = data.stops;
-    initMap();
-    addMarkers();
     buildFilters();
-    renderList();
+    renderMap();
+    el.summary.textContent = `${stops.filter(s => count(s.id) > 0).length} / ${stops.length}`;
   })
-  .catch(() => {
-    el.summary.textContent = 'Run via HTTP to load stops';
-  });
+  .catch(() => { el.summary.textContent = 'Run via HTTP to load stops'; });

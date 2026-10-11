@@ -4,37 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NYC Subway Counter</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <div class="header-left">
-      <h1>NYC Subway Counter</h1>
-      <span id="summary"></span>
-    </div>
-    <div class="view-toggle">
-      <button id="mapViewBtn" class="toggle-btn active">Map</button>
-      <button id="listViewBtn" class="toggle-btn">List</button>
-    </div>
+    <h1>NYC Subway Counter</h1>
+    <span id="summary"></span>
   </header>
 
   <div class="filter-bar">
     <div id="lineFilters" class="line-filters"></div>
   </div>
 
-  <div id="mapView" class="view-container">
-    <div id="map"></div>
-  </div>
-
-  <div id="listView" class="view-container" hidden>
-    <div class="list-scroll">
-      <input id="search" type="search" placeholder="Search stops or lines…" />
-      <label class="unvisited-label">
-        <input id="unvisitedOnly" type="checkbox" /> Unvisited only
-      </label>
-      <ul id="stopList"></ul>
-    </div>
+  <div class="map-wrap">
+    <svg id="subwayMap" width="100%" height="100%"></svg>
   </div>
 
   <dialog id="detail">
@@ -57,7 +40,6 @@
     </div>
   </dialog>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

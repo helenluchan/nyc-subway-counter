@@ -6,55 +6,31 @@ html, body {
   background: #fff;
   color: #111;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Header ── */
 header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
   padding: 0 16px;
   height: 48px;
-  background: #fff;
   border-bottom: 1px solid #ebebeb;
   flex-shrink: 0;
 }
 
-.header-left { display: flex; align-items: baseline; gap: 10px; }
 h1 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
-#summary { font-size: 0.78rem; color: #999; }
-
-.view-toggle {
-  display: flex;
-  background: #f2f2f2;
-  border-radius: 8px;
-  padding: 3px;
-  gap: 2px;
-}
-
-.toggle-btn {
-  border: none;
-  background: transparent;
-  color: #888;
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.toggle-btn.active { background: #fff; color: #111; font-weight: 600; }
+#summary { font-size: 0.78rem; color: #bbb; }
 
 /* ── Line filter bar ── */
 .filter-bar {
   height: 44px;
-  background: #fff;
   border-bottom: 1px solid #ebebeb;
   overflow-x: auto;
   overflow-y: hidden;
   flex-shrink: 0;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 .filter-bar::-webkit-scrollbar { display: none; }
@@ -62,7 +38,7 @@ h1 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
 .line-filters {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 0 16px;
   height: 100%;
   width: max-content;
@@ -70,143 +46,119 @@ h1 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
 
 .filter-all {
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 20px;
   border: 1px solid #ddd;
   background: transparent;
-  color: #555;
+  color: #888;
   cursor: pointer;
-  white-space: nowrap;
 }
-
 .filter-all.active { background: #111; color: #fff; border-color: #111; }
 
 .bullet-filter {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: none;
   font: inherit;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
-  flex-shrink: 0;
   background: var(--c);
   color: var(--t);
-  opacity: 0.75;
-  transition: opacity 0.12s, box-shadow 0.12s;
+  opacity: 0.6;
+  transition: opacity 0.1s, box-shadow 0.1s;
 }
-
 .bullet-filter.active { opacity: 1; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--c); }
 
-/* ── View containers ── */
-.view-container {
-  position: absolute;
-  top: 92px; /* header + filter */
-  left: 0; right: 0; bottom: 0;
+/* ── SVG map ── */
+.map-wrap {
+  flex: 1;
+  overflow: hidden;
+  background: #fafafa;
 }
 
-/* ── Map ── */
-#map { width: 100%; height: 100%; }
+#subwayMap { display: block; }
 
-.map-pin {
-  width: 28px;
-  height: 28px;
+/* ── Detail sheet ── */
+dialog {
+  width: min(94vw, 400px);
+  max-height: 85vh;
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  background: #fff;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+dialog::backdrop { background: rgba(0,0,0,0.25); }
+
+.sheet {
+  padding: 22px 20px 20px;
+  display: grid;
+  gap: 11px;
+  position: relative;
+  overflow-y: auto;
+  max-height: 85vh;
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 26px; height: 26px;
   border-radius: 50%;
+  border: none;
+  background: #f2f2f2;
+  color: #666;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 12px;
-  font-family: -apple-system, sans-serif;
   cursor: pointer;
-  position: relative;
-  border: 2px solid rgba(255,255,255,0.8);
+  padding: 0;
 }
 
-.map-pin-visited {
-  border-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-}
+.sheet-bullets { display: flex; flex-wrap: wrap; gap: 5px; }
+.sheet h2 { font-size: 1.1rem; font-weight: 700; padding-right: 30px; }
+.visit-count { font-size: 0.82rem; color: #aaa; margin-top: -4px; }
 
-.pin-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
+.here-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
   background: #111;
   color: #fff;
-  font-size: 8px;
+  font: inherit;
+  font-size: 0.95rem;
   font-weight: 700;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid #fff;
-}
-
-/* ── List view ── */
-.list-scroll {
-  height: 100%;
-  overflow-y: auto;
-  padding: 16px;
-  max-width: 600px;
-  margin: 0 auto;
-  display: grid;
-  gap: 10px;
-  align-content: start;
-}
-
-input[type="search"] {
-  width: 100%;
-  padding: 9px 12px;
-  border: 1px solid #e8e8e8;
-  border-radius: 10px;
-  font: inherit;
-  font-size: 0.9rem;
-  background: #fafafa;
-  outline: none;
-}
-
-input[type="search"]:focus { border-color: #bbb; background: #fff; }
-
-.unvisited-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: #666;
   cursor: pointer;
 }
+.here-btn:active { background: #333; }
 
-#stopList { list-style: none; display: grid; gap: 6px; }
-
-.stop-btn {
-  width: 100%;
-  text-align: left;
-  background: #fff;
-  border: 1px solid #ebebeb;
-  border-radius: 10px;
-  padding: 12px;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ccc;
+  margin-bottom: -4px;
 }
 
-.stop-btn:active { background: #fafafa; }
-.stop.visited .stop-btn { border-color: #d4e8d4; background: #f9fdf9; }
+.ideas-list, .history-list { padding-left: 15px; display: grid; gap: 3px; }
+.ideas-list li { font-size: 0.88rem; color: #333; }
+.history-list { list-style: none; padding: 0; }
+.history-list li { font-size: 0.82rem; color: #aaa; }
 
-.stop-bullets { display: flex; flex-wrap: wrap; gap: 3px; flex-shrink: 0; }
-.stop-info { min-width: 0; }
-.stop-name { font-size: 0.9rem; font-weight: 600; display: block; }
-.stop-meta { font-size: 0.78rem; color: #999; display: block; margin-top: 1px; }
-.stop.visited .stop-meta { color: #5a9a5a; }
+.text-btn {
+  border: none; background: none;
+  color: #ccc; font: inherit; font-size: 0.8rem;
+  cursor: pointer; padding: 0; text-align: left;
+}
+.text-btn:hover { color: #999; }
 
 /* ── Bullets ── */
 .bullet {
@@ -218,108 +170,4 @@ input[type="search"]:focus { border-color: #bbb; background: #fff; }
   flex-shrink: 0;
 }
 .b-sm { width: 20px; height: 20px; font-size: 10px; }
-.b-md { width: 28px; height: 28px; font-size: 13px; }
-
-/* ── Detail sheet ── */
-dialog {
-  width: min(94vw, 420px);
-  max-height: 85vh;
-  border: none;
-  border-radius: 16px;
-  padding: 0;
-  background: #fff;
-  box-shadow: 0 4px 40px rgba(0,0,0,0.18);
-  overflow: hidden;
-}
-
-dialog::backdrop { background: rgba(0,0,0,0.3); }
-
-.sheet {
-  padding: 24px 20px 20px;
-  display: grid;
-  gap: 12px;
-  position: relative;
-  overflow-y: auto;
-  max-height: 85vh;
-}
-
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: #f2f2f2;
-  color: #666;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.sheet-bullets { display: flex; flex-wrap: wrap; gap: 6px; }
-.sheet h2 { font-size: 1.15rem; font-weight: 700; padding-right: 32px; }
-
-.visit-count { font-size: 0.85rem; color: #999; margin-top: -4px; }
-
-.here-btn {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: #111;
-  color: #fff;
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.01em;
-}
-
-.here-btn:active { background: #333; }
-
-.section-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #bbb;
-  margin-bottom: -4px;
-}
-
-.ideas-list {
-  padding-left: 16px;
-  display: grid;
-  gap: 4px;
-}
-
-.ideas-list li, .history-list li {
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.history-list {
-  list-style: none;
-  display: grid;
-  gap: 2px;
-}
-
-.history-list li { color: #999; font-size: 0.85rem; }
-
-.text-btn {
-  border: none;
-  background: none;
-  color: #bbb;
-  font: inherit;
-  font-size: 0.82rem;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-}
-
-.text-btn:hover { color: #888; }
+.b-md { width: 27px; height: 27px; font-size: 13px; }
