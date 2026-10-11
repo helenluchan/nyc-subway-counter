@@ -9,17 +9,17 @@
 </head>
 <body>
   <header>
-    <h1>NYC Subway Counter</h1>
-    <div class="header-right">
+    <div class="header-left">
+      <h1>NYC Subway Counter</h1>
       <span id="summary"></span>
-      <div class="view-toggle">
-        <button id="mapViewBtn" class="toggle-btn active">Map</button>
-        <button id="listViewBtn" class="toggle-btn">List</button>
-      </div>
+    </div>
+    <div class="view-toggle">
+      <button id="mapViewBtn" class="toggle-btn active">Map</button>
+      <button id="listViewBtn" class="toggle-btn">List</button>
     </div>
   </header>
 
-  <div class="line-filter-bar">
+  <div class="filter-bar">
     <div id="lineFilters" class="line-filters"></div>
   </div>
 
@@ -28,33 +28,31 @@
   </div>
 
   <div id="listView" class="view-container" hidden>
-    <div class="list-inner">
-      <section class="controls">
-        <input id="search" type="search" placeholder="Search stops" />
-        <label><input id="unvisitedOnly" type="checkbox" /> Unvisited only</label>
-      </section>
-      <ul id="stopList" class="stop-list"></ul>
+    <div class="list-scroll">
+      <input id="search" type="search" placeholder="Search stops or lines…" />
+      <label class="unvisited-label">
+        <input id="unvisitedOnly" type="checkbox" /> Unvisited only
+      </label>
+      <ul id="stopList"></ul>
     </div>
   </div>
 
   <dialog id="detail">
-    <div class="detail-body">
-      <button type="button" id="closeDialog" class="close-btn" aria-label="Close">&times;</button>
-      <div class="detail-header">
-        <div id="detailBullets" class="detail-bullets"></div>
-        <h2 id="detailName"></h2>
-      </div>
+    <div class="sheet">
+      <button id="closeDialog" class="close-btn" aria-label="Close">&times;</button>
+      <div id="detailBullets" class="sheet-bullets"></div>
+      <h2 id="detailName"></h2>
+      <p id="detailVisitCount" class="visit-count"></p>
 
-      <button type="button" id="imHere" class="im-here-btn">I'm here!</button>
-      <p id="detailVisitCount" class="visit-count-display"></p>
+      <button id="imHere" class="here-btn">I'm here</button>
 
-      <h3>Things to do nearby</h3>
-      <ul id="detailIdeas"></ul>
+      <p class="section-label">Things to do nearby</p>
+      <ul id="detailIdeas" class="ideas-list"></ul>
 
-      <div id="historySection" class="history-section" hidden>
-        <h3>Your visits</h3>
-        <ul id="visitHistory"></ul>
-        <button type="button" id="removeLastVisit" class="secondary small">Remove last visit</button>
+      <div id="historySection" hidden>
+        <p class="section-label">Your visits</p>
+        <ul id="visitHistory" class="history-list"></ul>
+        <button id="removeLastVisit" class="text-btn">Remove last visit</button>
       </div>
     </div>
   </dialog>
