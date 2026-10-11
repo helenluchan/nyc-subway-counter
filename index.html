@@ -4,28 +4,46 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NYC Subway Counter</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
     <h1>NYC Subway Counter</h1>
-    <p id="summary"></p>
+    <div class="header-right">
+      <span id="summary"></span>
+      <div class="view-toggle">
+        <button id="mapViewBtn" class="toggle-btn active">Map</button>
+        <button id="listViewBtn" class="toggle-btn">List</button>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section class="controls">
-      <input id="search" type="search" placeholder="Search stops or lines" />
-      <label><input id="unvisitedOnly" type="checkbox" /> Unvisited only</label>
-    </section>
+  <div class="line-filter-bar">
+    <div id="lineFilters" class="line-filters"></div>
+  </div>
 
-    <ul id="stopList" class="stop-list"></ul>
-  </main>
+  <div id="mapView" class="view-container">
+    <div id="map"></div>
+  </div>
+
+  <div id="listView" class="view-container" hidden>
+    <div class="list-inner">
+      <section class="controls">
+        <input id="search" type="search" placeholder="Search stops" />
+        <label><input id="unvisitedOnly" type="checkbox" /> Unvisited only</label>
+      </section>
+      <ul id="stopList" class="stop-list"></ul>
+    </div>
+  </div>
 
   <dialog id="detail">
     <div class="detail-body">
       <button type="button" id="closeDialog" class="close-btn" aria-label="Close">&times;</button>
-      <h2 id="detailName"></h2>
-      <p id="detailLines" class="lines"></p>
+      <div class="detail-header">
+        <div id="detailBullets" class="detail-bullets"></div>
+        <h2 id="detailName"></h2>
+      </div>
 
       <button type="button" id="imHere" class="im-here-btn">I'm here!</button>
       <p id="detailVisitCount" class="visit-count-display"></p>
@@ -41,6 +59,7 @@
     </div>
   </dialog>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
