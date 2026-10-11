@@ -1,0 +1,85 @@
+{
+  "_note": "SAMPLE DATA. 10 hand-entered stops with approximate coordinates. Replace by running scripts/build-stops.js on the MTA GTFS stops.txt file.",
+  "stops": [
+    {
+      "id": "R16",
+      "name": "Times Sq-42 St",
+      "lines": ["1", "2", "3", "7", "A", "C", "E", "N", "Q", "R", "W", "S"],
+      "lat": 40.7557,
+      "lng": -73.9871,
+      "ideas": ["Walk to Bryant Park", "Broadway show tickets at TKTS", "Grab a slice nearby"]
+    },
+    {
+      "id": "R01",
+      "name": "Grand Central-42 St",
+      "lines": ["4", "5", "6", "7", "S"],
+      "lat": 40.7527,
+      "lng": -73.9772,
+      "ideas": ["Main Concourse ceiling", "Oyster Bar", "Walk the High Line entrance"]
+    },
+    {
+      "id": "R20",
+      "name": "Union Sq-14 St",
+      "lines": ["4", "5", "6", "L", "N", "Q", "R", "W"],
+      "lat": 40.7359,
+      "lng": -73.9911,
+      "ideas": ["Greenmarket on Mondays, Wednesdays, Fridays, and Saturdays", "Strand Bookstore"]
+    },
+    {
+      "id": "R31",
+      "name": "Atlantic Av-Barclays Ctr",
+      "lines": ["2", "3", "4", "5", "B", "D", "N", "Q", "R"],
+      "lat": 40.6841,
+      "lng": -73.9778,
+      "ideas": ["Prospect Park", "Brooklyn Museum (a short walk)"]
+    },
+    {
+      "id": "R29",
+      "name": "Jay St-MetroTech",
+      "lines": ["A", "C", "F", "R"],
+      "lat": 40.6923,
+      "lng": -73.9872,
+      "ideas": ["Brooklyn Borough Hall", "Walk across to DUMBO"]
+    },
+    {
+      "id": "R22",
+      "name": "Court Sq",
+      "lines": ["7", "E", "G", "M"],
+      "lat": 40.7472,
+      "lng": -73.9456,
+      "ideas": ["Ride the 7 to the last stop", "Hunters Point Park views"]
+    },
+    {
+      "id": "R27",
+      "name": "Coney Island-Stillwell Av",
+      "lines": ["D", "F", "N", "Q"],
+      "lat": 40.5775,
+      "lng": -73.9810,
+      "ideas": ["Boardwalk walk", "Nathan's Famous (seasonal)", "Coney Island beach"]
+    },
+    {
+      "id": "R23",
+      "name": "Brooklyn Bridge-City Hall",
+      "lines": ["4", "5", "6"],
+      "lat": 40.7131,
+      "lng": -74.0042,
+      "ideas": ["Brooklyn Bridge walk", "Lower Manhattan skyline views"]
+    },
+    {
+      "id": "R33",
+      "name": "Smith-9 Sts",
+      "lines": ["F", "G"],
+      "lat": 40.6732,
+      "lng": -73.9979,
+      "ideas": ["Carroll Gardens brunch", "Gowanus Canal walk"]
+    },
+    {
+      "id": "R11",
+      "name": "Flushing-Main St",
+      "lines": ["7"],
+      "lat": 40.7596,
+      "lng": -73.8300,
+      "ideas": ["Flushing Chinatown food", "Queens Museum"]
+    }
+  ]
+}

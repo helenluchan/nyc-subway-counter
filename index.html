@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subway Stop Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Subway Stop Tracker</h1>
+    <p id="summary"></p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <input id="search" type="search" placeholder="Search stops or lines" />
+      <label><input id="unvisitedOnly" type="checkbox" /> Unvisited only</label>
+    </section>
+
+    <ul id="stopList" class="stop-list"></ul>
+  </main>
+
+  <dialog id="detail">
+    <form method="dialog" class="detail-body">
+      <h2 id="detailName"></h2>
+      <p id="detailLines" class="lines"></p>
+      <h3>Things to do</h3>
+      <ul id="detailIdeas"></ul>
+
+      <h3>Log a visit</h3>
+      <label>Date <input id="visitDate" type="date" /></label>
+      <label>Note <textarea id="visitNote" rows="3" placeholder="What did you do here?"></textarea></label>
+
+      <div class="actions">
+        <button type="button" id="saveVisit">Save visit</button>
+        <button type="button" id="clearVisit" class="secondary">Remove visit</button>
+        <button type="submit" class="secondary">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
